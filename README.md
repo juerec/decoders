@@ -1,6 +1,6 @@
 ##  cmdfsk
 
-####A small command line tool for decoding RTTY and NAVTEX signals
+<h3>A small command line tool for decoding RTTY and NAVTEX signals</h3>
 
 **Works with real signals or IQ signals**<br>
 **Works with any sample rates and any shift**<br>
@@ -19,7 +19,7 @@ For the sample rate, 8000 is a good value. Higher ones does increase the calcula
 without any improvments on decoding result.
 
 
-####If have problems decoding your files:
+<h3>If have problems decoding your files:</h3>
 
 * Check:       --center-freq  --shift  --decoder-type
 * Play with:   --window-size  --fft-size
@@ -29,7 +29,7 @@ A very good program therefor is sonic-visualiser, audacity does a good job too.
 * For IQ signals, test -xchg-i-q. The samples order in the stereo file may be inverse.
 
 
-###cmdfsk v1.0.4 command line options:
+<h3>cmdfsk v1.0.4 command line options:</h3>
 
 
 <table>

@@ -19,7 +19,7 @@ For the sample rate, 8000 is a good value. Higher ones does increase the calcula
 without any improvments on decoding result.
 
 
-<h3>If have problems decoding your files:</h3>
+<h3>If you have problems decoding your files:</h3>
 
 * Check:       --center-freq  --shift  --decoder-type
 * Play with:   --window-size  --fft-size

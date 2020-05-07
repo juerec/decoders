@@ -68,9 +68,9 @@ A very good program therefor is sonic-visualiser, audacity does a good job too.
 
 
 
-##libFSKDecoder
+## libFSKDecoder
  
-####A library for decoding RTTY and NAVTEX signals.
+<h3>A library for decoding RTTY and NAVTEX signals.</h3>
 
 Compilation is tested under Linux only. How long it uses no systemspecific calls, it should work on other systems too.
 

@@ -21,4 +21,4 @@
 
 **This library does the actual work for cmdfsk**
 
-For more details see README.m in the directories
+For more details see README.md in the directories

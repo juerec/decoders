@@ -48,13 +48,13 @@ int WindowFunction;
   case TYPE_RTTY_REAL :
   case TYPE_RTTY_IQ :
     BufferWidth = 24;
-    BitLength = Options->SampleRate / 50;
+    BitLength = Options->SampleRate / 100;
     CharacterLength = (BitLength * 15) / 2;
     StopLength = BitLength + BitLength / 2;
+    if (FFTSize == 0)
+      FFTSize = (Options->SampleRate * 256) / 8000;
     if (WindowSize == 0)
       WindowSize = BitLength;
-    if (FFTSize == 0)
-      FFTSize = WindowSize;
     if (WindowFunction == -1)
       Options->WindowFunction = 6;
     SamplesBufferSize = (BufferWidth * 15 * BitLength) / 2 + WindowSize;
@@ -63,19 +63,24 @@ int WindowFunction;
   case TYPE_NAVTEX_REAL :
   case TYPE_NAVTEX_IQ :
     BufferWidth = 48;
-    BitLength = Options->SampleRate / 100;
+    BitLength = Options->SampleRate / 200;
     CharacterLength = BitLength * 7;
     StopLength = 0;
+    if (FFTSize == 0)
+      FFTSize = (Options->SampleRate * 256) / 8000;
     if (WindowSize == 0)
       WindowSize = BitLength;
-    if (FFTSize == 0)
-      FFTSize = WindowSize;
     if (WindowFunction == -1)
       Options->WindowFunction = 4;
     SamplesBufferSize = BufferWidth * CharacterLength + WindowSize;
     SyncReservePoints = (BitLength / 2) / StepWidth;
     break;
   }
+  // Write back changed values to the caller.
+  Options->WindowSize     = WindowSize;
+  Options->FFTSize        = FFTSize;
+  Options->WindowFunction = WindowFunction;
+  
   AvPreLength = CharacterLength / StepWidth;
   
   SamplesBuffer = new short [SamplesBufferSize];

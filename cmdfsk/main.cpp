@@ -68,7 +68,6 @@ void printHelp(int ret) {
   printf("-D --audio-device          alsa audio device for input\n");
   printf("-i --incr-factor           factor for fading compensation\n");
   printf("-d --decr-factor           factor for fading compensation\n");
-  printf("-B --buffer-width          internal char buffer 8 ... 128\n");
   printf("-R --samplerate            sample rate, for audio input only\n");
   printf("-x --xchg-i-q              exchange I - Q, for IQ sources only\n");
   printf("                           the window functions are:\n");
@@ -102,7 +101,6 @@ static struct option long_options1[] = {
       { "decr-factor",   required_argument, 0, 'd' },
       { "samplerate",    required_argument, 0, 'R' },
       { "xchg-i-q",      no_argument,       0, 'x' },
-      { "buffer-width",  required_argument, 0, 'B' },
       { NULL,            0,                 0,  0  }
   };
 
@@ -153,6 +151,7 @@ bool    eof = false;
         DecoderOptions.DecoderType = TYPE_NAVTEX_IQ;
         break;
       }
+      printf("invalid docoder type\n");
       printHelp(1);
       break;
    case 'F' :
@@ -226,22 +225,11 @@ bool    eof = false;
   }
 
   if (!isWaveFilename && !isAudioDevice) {
-    switch (DecoderOptions.DecoderType) {
-    case TYPE_RTTY_REAL :
-      strcpy(WaveFilename, "rtty.wav");
-      break;
-    case TYPE_RTTY_IQ :
-      strcpy(WaveFilename, "rtty-iq.wav");
-      break;
-    case TYPE_NAVTEX_REAL :
-      strcpy(WaveFilename, "navtex.wav");
-      break;
-    case TYPE_NAVTEX_IQ :
-      strcpy(WaveFilename, "navtex-iq.wav");
-      break;
-    }
+    strcpy(WaveFilename, "stdin");
     isWaveFilename = true;
   }
+  if (DecoderOptions.verbose = 1 && isWaveFilename && strcmp(WaveFilename, "sdtin") == 0 && !isSampleRate)
+    printf("Warning: No samplerate specified, using default %i\n", DecoderOptions.SampleRate);
 
   if (DecoderOptions.verbose)
     printf("  Input            = %s\n", isAudioDevice ? AudioDevice : WaveFilename);

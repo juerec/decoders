@@ -42,29 +42,29 @@ int Channels;
     Channels = 1;
 
   if (!isSoundDevice) {
-    if (!Wave.open(DeviceName)) {
-      logger.error("DecoderIO::init()", __LINE__, " cannot open wave file: \"%s\"\n", DeviceName);
-      // printf("DecoderIO::init() %i: cannot open wave file: \"%s\"\n", __LINE__, DeviceName);
-      if (errno != 0)
-        logger.error("DecoderIO::init()", __LINE__, " %s\n", strerror(errno));
-	// printf("DecoderIO::init() %i:  %s\n", __LINE__, strerror(errno));
-      else
-        logger.error("DecoderIO::init()", __LINE__, " no valid wave file.\n");
-        // printf("DecoderIO::init() %i:  no valid wave file.\n", __LINE__);
-      return -1;
+    if (strcmp(DeviceName, "stdin") == 0) {
+      InputSource = INPUT_STDIN;
+      freopen(NULL, "rb", stdin);
+    } else {
+      if (!Wave.open(DeviceName)) {
+        logger.error("DecoderIO::init()", __LINE__, " cannot open wave file: \"%s\"\n", DeviceName);
+        if (errno != 0)
+          logger.error("DecoderIO::init()", __LINE__, " %s\n", strerror(errno));
+        else
+          logger.error("DecoderIO::init()", __LINE__, " no valid wave file.\n");
+        return -1;
+      }
+      if (Wave.channels() != Channels) {
+        logger.error("DecoderIO::init()", __LINE__, " incorrect channel count of %i, expected: %i\n", Wave.channels(), Channels);
+        return -1;
+      }
+      if (Wave.sampleRate() % 4000 != 0 || Wave.sampleRate() < 8000) {
+        logger.error("DecoderIO::init()", __LINE__, " incorrect sample rate of %i, expected: an integer multiply of 4000, >= 8000\n", Wave.sampleRate());
+        return -1;
+      }
+      *pSampleRate = Wave.sampleRate();
+      InputSource  = INPUT_WAVEFILE;
     }
-    if (Wave.channels() != Channels) {
-      logger.error("DecoderIO::init()", __LINE__, " incorrect channel count of %i, expected: %i\n", Wave.channels(), Channels);
-      // printf("DecoderIO::init() %i: incorrect channel count of %i, expected: %i\n", __LINE__, Wave.channels(), Channels);
-      return -1;
-    }
-    if (Wave.sampleRate() % 4000 != 0 || Wave.sampleRate() < 8000) {
-      logger.error("DecoderIO::init()", __LINE__, " incorrect sample rate of %i, expected: an integer multiply of 4000, >= 8000\n", Wave.sampleRate());
-      // printf("DecoderIO::init() %i: incorrect sample rate of %i, expected: an integer multiply of 4000, >= 8000\n", __LINE__, Wave.sampleRate());
-      return -1;
-    }
-    *pSampleRate = Wave.sampleRate();
-    InputSource  = INPUT_WAVEFILE;
   }
 
   if (isSoundDevice) {
@@ -81,14 +81,23 @@ int Channels;
 }
 
 int DecoderIO::read(short * Samples, int nSamples) {
-  if (InputSource == INPUT_WAVEFILE) {
+int ret = 0;
+  switch (InputSource) {
+  case INPUT_NONE :
+    break;
+  case INPUT_WAVEFILE :
     if (Wave.eof())
-      return 0;
-    return Wave.readSamples(Samples, nSamples);
+      break;
+    ret = Wave.readSamples(Samples, nSamples);
+    break;
+  case INPUT_SOUND :
+    ret = Sound.readCapture(Samples, nSamples);
+    break;
+  case INPUT_STDIN :
+    ret = fread(Samples, sizeof(short), nSamples, stdin);
+    break;
   }
-  if (InputSource == INPUT_SOUND)
-    return Sound.readCapture(Samples, nSamples);
-  return 0;
+  return ret;
 }
 
 bool DecoderIO::eof() {

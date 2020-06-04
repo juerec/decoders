@@ -30,7 +30,8 @@ class DecoderIO {
   enum INPUT_SOURCE {
     INPUT_NONE,  
     INPUT_WAVEFILE,
-    INPUT_SOUND
+    INPUT_SOUND,
+    INPUT_STDIN
   };
  
  

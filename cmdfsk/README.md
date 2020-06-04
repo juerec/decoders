@@ -46,7 +46,6 @@ A very good program therefor is sonic-visualiser, audacity does a good job too.
 <tr><td>-D<br>--audio-device</td><td>alsa audio device for input</td><td>must be set<br>omit if -f option is used</td></tr>
 <tr><td>-i<br>--incr-factor</td><td>factor for fading compensation</td><td>0.4</td></tr>
 <tr><td>-d<br>--decr-factor</td><td>factor for fading compensation</td><td>0.9988</td></tr>
-<tr><td>-B<br>--buffer-width</td><td>internal char buffer 8 ... 128</td><td>navtex: 48   rtty: 24</td></tr>
 <tr><td>-R<br>--samplerate</td><td>sample rate, for audio input only</td><td>-D: 8000<br>-f: taken from file</td></tr>
 <tr><td>-x<br>--xchg-i-q</td><td>exchange I - Q, for IQ sources only</td><td>unset</td></tr>
 </table>
@@ -65,6 +64,10 @@ A very good program therefor is sonic-visualiser, audacity does a good job too.
 <tr><td>9</td><td>Gaussian(a=4.5)</td></tr>
 <tr><td>10</td><td>Flat-Top</td></tr>
 </table>
+
+#### Input
+if no input source is given it reads from <b>stdin</b><br>
+For input from <b>stdin</b> you must specify the sample rate too.
 
 
 ### Building

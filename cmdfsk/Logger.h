@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-**  This file is a part of the program "PC NAVTEX".
+**  This file is a part of the program "CMDFSK".
 **
 **  Copyright © 2020 Jürgen Reche
 **

@@ -26,6 +26,7 @@
 #include <string.h>
 #include <errno.h>
 #include <stdarg.h>
+#include <stdlib.h>
 
 Logger logger;
 
@@ -71,6 +72,7 @@ void Logger::log(const char * Level, const char * Location, const char * fmt, va
 //time_t t = time(NULL);
 struct tm tt; // = *localtime(&t);
 struct timeval tv;
+const char  * nl;
 
   gettimeofday(&tv, NULL);
   tt = *localtime(&tv.tv_sec);
@@ -81,15 +83,10 @@ struct timeval tv;
 
   fprintf(f, "%04i-%02i-%02i %02i:%02i:%02i.%03i %s : %s ", tt.tm_year + 1900, tt.tm_mon + 1, tt.tm_mday, tt.tm_hour, tt.tm_min, tt.tm_sec, (int)(tv.tv_usec / 1000), Level == NULL ? "LOG:   " : Level, Location == NULL ? "---" : Location);
 
-  if (fmt != NULL) {
-/*
-    va_list ap;
-    va_start(ap, fmt);
-    vfprintf(f, fmt, ap);
-    va_end(ap);
-*/
+  if (fmt != nullptr) {
     vfprintf(f, fmt, *ap);
-    if (strchr(fmt, '\n') == NULL)
+    nl = strrchr(fmt, '\n');
+    if (nl != nullptr && nl[1] != 0)
       fprintf(f, "\n");
   } else {
     fprintf(f, "\n");
@@ -100,10 +97,14 @@ struct timeval tv;
 }
 
 void Logger::log(const char * Level, const char * Location, int Line, const char * fmt, va_list * ap) {
-//time_t t = time(NULL);
-struct tm tt; // = *localtime(&t);
+struct tm tt;
 struct timeval tv;
 const char * pSpace;
+const char  * nl;
+
+#ifndef NO_THREADS
+  mutex.lock();
+#endif
 
   if (Location == NULL) {
     pSpace = "---";
@@ -121,18 +122,17 @@ const char * pSpace;
   fprintf(f, "%04i-%02i-%02i %02i:%02i:%02i.%03i %s : %s[%i] ", tt.tm_year + 1900, tt.tm_mon + 1, tt.tm_mday, tt.tm_hour, tt.tm_min, tt.tm_sec, (int)(tv.tv_usec / 1000), Level == NULL ? "LOG:   " : Level, pSpace, Line);
 
   if (fmt != NULL) {
-/*
-    va_list ap;
-    va_start(ap, fmt);
-    vfprintf(f, fmt, ap);
-    va_end(ap);
-*/
     vfprintf(f, fmt, *ap);
-    if (strchr(fmt, '\n') == NULL)
+    nl = strrchr(fmt, '\n');
+    if (nl != nullptr && nl[1] != 0)
       fprintf(f, "\n");
   } else {
     fprintf(f, "\n");
   }
+  
+#ifndef NO_THREADS
+  mutex.unlock();
+#endif
 }
 
 void  Logger::error(const char * Location, const char * fmt, ...) {

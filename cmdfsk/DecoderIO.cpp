@@ -47,7 +47,7 @@ int Channels;
       freopen(NULL, "rb", stdin);
     } else {
       if (!Wave.open(DeviceName)) {
-        logger.error("DecoderIO::init()", __LINE__, " cannot open wave file: \"%s\"\n", DeviceName);
+        logger.error("DecoderIO::init()", __LINE__, " cannot open wave file: \"%s\"\n", DeviceName == nullptr ? "NULL" : DeviceName);
         if (errno != 0)
           logger.error("DecoderIO::init()", __LINE__, " %s\n", strerror(errno));
         else

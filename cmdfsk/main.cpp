@@ -107,8 +107,8 @@ static struct option long_options1[] = {
 static const char * short_options = "hvt:S:c:w:W:F:f:D:i:d:R:xB:";
 
 int main(int argc, char * argv[]) {
-char    WaveFilename[256];
-char    AudioDevice[64];
+char    WaveFilename[256] = "";
+char    AudioDevice[64]   = "";
 bool    isWaveFilename = false;
 bool    isAudioDevice = false;
 bool    isShift = false;
@@ -121,11 +121,9 @@ short * SampleBuffer;
 int     SampleBufferSize;
 int     nSampleBuffer;
 bool    eof = false;
+bool    isSampleRate = false;
 
   printf("cmdfsk %s\n", VERSION);
-
-  WaveFilename[0] = 0;
-  AudioDevice[0] = 0;
 
   fskDecoderInitOptions(&DecoderOptions);
 
@@ -174,17 +172,22 @@ bool    eof = false;
       DecoderOptions.DecreaseFactor = atof(optarg);
       break;
     case 'f' :
-      strncpy(WaveFilename, optarg, sizeof(WaveFilename) - 1);
-      WaveFilename[sizeof(WaveFilename) - 1] = 0;
-      isWaveFilename = true;
+      if (optarg != NULL) {
+        strncpy(WaveFilename, optarg, sizeof(WaveFilename) - 1);
+        WaveFilename[sizeof(WaveFilename) - 1] = 0;
+        isWaveFilename = strlen(WaveFilename) > 0;
+      }
       break;
     case 'D' :
-      strncpy(AudioDevice, optarg, sizeof(AudioDevice) - 1);
-      AudioDevice[sizeof(AudioDevice) - 1] = 0;
-      isAudioDevice = true;
+      if (optarg != NULL) {
+        strncpy(AudioDevice, optarg, sizeof(AudioDevice) - 1);
+        AudioDevice[sizeof(AudioDevice) - 1] = 0;
+        isAudioDevice = strlen(AudioDevice) > 3;
+      }
       break;
     case 'R' :
       DecoderOptions.SampleRate = atoi(optarg);
+      isSampleRate = true;
       break;
     case 'x' :
       DecoderOptions.xchgIQ = true;
@@ -228,7 +231,7 @@ bool    eof = false;
     strcpy(WaveFilename, "stdin");
     isWaveFilename = true;
   }
-  if (DecoderOptions.verbose = 1 && isWaveFilename && strcmp(WaveFilename, "sdtin") == 0 && !isSampleRate)
+  if (DecoderOptions.verbose = 1 && isWaveFilename && strcmp(WaveFilename, "stdin") == 0 && !isSampleRate)
     printf("Warning: No samplerate specified, using default %i\n", DecoderOptions.SampleRate);
 
   if (DecoderOptions.verbose)

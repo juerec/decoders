@@ -48,7 +48,7 @@ int WindowFunction;
   case TYPE_RTTY_REAL :
   case TYPE_RTTY_IQ :
     BufferWidth = 24;
-    BitLength = Options->SampleRate / 100;
+    BitLength = Options->SampleRate / 50;
     CharacterLength = (BitLength * 15) / 2;
     StopLength = BitLength + BitLength / 2;
     if (FFTSize == 0)
@@ -63,7 +63,7 @@ int WindowFunction;
   case TYPE_NAVTEX_REAL :
   case TYPE_NAVTEX_IQ :
     BufferWidth = 48;
-    BitLength = Options->SampleRate / 200;
+    BitLength = Options->SampleRate / 100;
     CharacterLength = BitLength * 7;
     StopLength = 0;
     if (FFTSize == 0)
@@ -128,7 +128,7 @@ int WindowFunction;
   spectrogram->init(WindowSize, Options->WindowFunction, FFTSize, iBinMark, iBinSpace, Options->xchgIQ);
   decoder->init(CharacterLength / StepWidth, BitLength / StepWidth, StopLength / StepWidth);
   StepWidth *= Channels;
-  
+ 
   if (Options->verbose > 0) {
     switch (Options->DecoderType) {
     case TYPE_RTTY_REAL :   printf("  Decoder type     = rtty\n"); break;

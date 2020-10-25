@@ -128,7 +128,7 @@ int WindowFunction;
   spectrogram->init(WindowSize, Options->WindowFunction, FFTSize, iBinMark, iBinSpace, Options->xchgIQ);
   decoder->init(CharacterLength / StepWidth, BitLength / StepWidth, StopLength / StepWidth);
   StepWidth *= Channels;
-  
+ 
   if (Options->verbose > 0) {
     switch (Options->DecoderType) {
     case TYPE_RTTY_REAL :   printf("  Decoder type     = rtty\n"); break;

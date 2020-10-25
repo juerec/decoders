@@ -267,7 +267,7 @@ bool    isSampleRate = false;
 
     FSKDecodedText * txt = fskDecoderOutput(handle);
 
-    printf(txt->Text);
+    printf("%s", txt->Text);
 
     fskDecoderFreeOutput(txt);
   }

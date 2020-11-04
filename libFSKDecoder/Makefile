@@ -101,7 +101,7 @@ clean-all :
 	rm -fr ./obj-static ./obj-shared $(lib_so_name) $(lib_ar_name)
 
 clean-shared : clean-all
-clean-statig : clean-all
+clean-static : clean-all
 	
 ok : 
 	@echo $(lib_name) Ok.
